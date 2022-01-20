@@ -5,10 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.FlightStick;
+import frc.robot.Constants.GamePad;
+import frc.robot.Constants.Laptop;
+import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,14 +23,17 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private Joystick m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
+  private Joystick m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    configureDefaultCommands();
   }
 
   /**
@@ -34,7 +42,26 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    new JoystickButton(m_gamePad, GamePad.Button.kRB)
+      .whenPressed(() -> m_driveSubsystem.resetEncoders()
+  );
+  }
+
+  /**
+   * Use this method to define the default commands for subsystems
+   */
+  private void configureDefaultCommands() {
+    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
+      () -> m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
+      () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
+    ));
+
+    // m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
+    //   () -> m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown), 
+    //   () -> m_gamePad.getRawAxis(GamePad.RightStick.kLeftRight)
+    // ));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -43,6 +70,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
