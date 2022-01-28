@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.FlightStick;
 import frc.robot.Constants.GamePad;
 import frc.robot.Constants.Laptop;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -24,7 +26,8 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-
+  private ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  
   private Joystick m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
   private Joystick m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
 
@@ -61,6 +64,10 @@ public class RobotContainer {
     //   () -> m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown), 
     //   () -> m_gamePad.getRawAxis(GamePad.RightStick.kLeftRight)
     // ));
+
+    m_climberSubsystem.setDefaultCommand(new RunCommand(
+      () -> m_climberSubsystem.move(-m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown))
+    , m_climberSubsystem));
   }
 
   /**

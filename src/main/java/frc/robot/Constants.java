@@ -20,8 +20,14 @@ public final class Constants {
             public static final int kRightLeader = 13;
             public static final int kRightFollower = 14;
         }
-        public static final class PwmPort { }
-        public static final class DioPort { }
+        public static final class PwmPort {
+            public static final int kClimberMotor=11;
+
+         }
+        public static final class DioPort { 
+            public static final int kTopLimmit = 7;
+            public static final int kBottomLimmit = 6;
+        }
     }
 
     public static final class Laptop {
