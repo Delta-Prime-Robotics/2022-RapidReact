@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RoboRio;
 
@@ -54,6 +55,10 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getPosition());
+    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getPosition());
+    SmartDashboard.putNumber("Left Drive Motor Speed", m_leftLeader.get());
+    SmartDashboard.putNumber("Right Drive Motor Speed", m_rightLeader.get());
   }
 
   public void setRampRate(double rate) {

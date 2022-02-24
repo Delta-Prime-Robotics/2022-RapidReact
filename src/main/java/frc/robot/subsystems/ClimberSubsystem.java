@@ -6,17 +6,23 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RoboRio;
 
 public class ClimberSubsystem extends SubsystemBase {
+
   private final VictorSP m_motor = new VictorSP(RoboRio.PwmPort.kClimberMotor);
 
-  private final DigitalInput m_topLimmit = new DigitalInput(RoboRio.DioPort.kTopLimmit);
-  private final DigitalInput m_bottomLimmit = new DigitalInput(RoboRio.DioPort.kBottomLimmit);
+  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kTopLimit);
+  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kBottomLimit);
 
   /** Creates a new ClimberSumsystem. */
-  public ClimberSubsystem() {}
+  public ClimberSubsystem() {
+    SmartDashboard.putData("Climber Top Limit Switch", m_topLimit);
+    SmartDashboard.putData("Climber Bottom Limit Switch", m_bottomLimit);
+    SmartDashboard.putData("Climber Motor", m_motor);
+  }
 
   @Override
   public void periodic() {
@@ -27,6 +33,10 @@ public class ClimberSubsystem extends SubsystemBase {
     m_motor.set(0);
   }
 
+  /***
+   * Move the climber up or down.
+   * @param speed A positive value moves the climber up.
+   */
   public void move(double speed) {
     if (speed > 0.0) {
       if (isAtTop()) {
@@ -49,10 +59,11 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTop() {
-    return m_topLimmit.get();
+    return m_topLimit.get();
   }
-public boolean isAtBottom() {
-  return m_bottomLimmit.get();
-}
+  
+  public boolean isAtBottom() {
+    return m_bottomLimit.get();
+  }
 
 }

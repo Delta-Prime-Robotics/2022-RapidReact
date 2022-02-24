@@ -14,8 +14,11 @@ import frc.robot.Constants.FlightStick;
 import frc.robot.Constants.GamePad;
 import frc.robot.Constants.Laptop;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,6 +30,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  private ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  private IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
   
   private Joystick m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
   private Joystick m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
@@ -48,7 +54,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(m_gamePad, GamePad.Button.kRB)
       .whenPressed(() -> m_driveSubsystem.resetEncoders()
-  );
+    );
+    new JoystickButton(m_gamePad, GamePad.Button.kLT) 
+      .whenPressed(() -> m_cameraSubsystem.switchToShooterCam()
+    );
+    new JoystickButton(m_gamePad, GamePad.Button.kRT) 
+      .whenPressed(() -> m_cameraSubsystem.switchToClimberCam()
+    );
+
   }
 
   /**
@@ -60,14 +73,17 @@ public class RobotContainer {
       () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
     ));
 
-    // m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
-    //   () -> m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown), 
-    //   () -> m_gamePad.getRawAxis(GamePad.RightStick.kLeftRight)
-    // ));
-
     m_climberSubsystem.setDefaultCommand(new RunCommand(
       () -> m_climberSubsystem.move(-m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown))
     , m_climberSubsystem));
+
+    m_armSubsystem.setDefaultCommand(new RunCommand(
+      () -> m_armSubsystem.go(-m_gamePad.getRawAxis(GamePad.RightStick.kUpDown))
+      , m_armSubsystem));
+
+    m_intakeSubsystem.setDefaultCommand(new RunCommand(
+      () -> m_intakeSubsystem.go(-m_gamePad.getRawAxis(GamePad.RightStick.kLeftRight))
+      , m_intakeSubsystem));
   }
 
   /**

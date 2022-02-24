@@ -9,28 +9,34 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.RoboRio;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
 
-  private CANSparkMax m_motor;
-  private final DigitalInput m_topLimmit = new DigitalInput(RoboRio.DioPort.kTopLimmit);
-  private final DigitalInput m_bottomLimmit = new DigitalInput(RoboRio.DioPort.kBottomLimmit);
+  private final CANSparkMax m_motor = new CANSparkMax(RoboRio.CanId.kIntake, MotorType.kBrushless);
+
+  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kTopLimit);
+  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kBottomLimit);
   
   /** Creates a new IntakeSubsystem. */
   public ArmSubsystem() { 
-    
-    m_motor = new CANSparkMax(RoboRio.CanId.kIntake, MotorType.kBrushless);
-  
+        
+    SmartDashboard.putData("Arm Top Limit Switch", m_topLimit);
+    SmartDashboard.putData("Arm Bottom Limit Switch", m_bottomLimit);  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Arm Motor Speed", m_motor.get());
   }
 
-
-  public void go (double speed){ 
+  /***
+   * Move the shooter arm up or down.
+   * @param speed A positive value moves the shooter arm up.
+   */
+  public void go(double speed){ 
     if (speed > 0.0) {
       if (isAtTop()) {
         speed = 0.0;
@@ -52,10 +58,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTop() {
-    return m_topLimmit.get();
+    return m_topLimit.get();
   }
 
   public boolean isAtBottom() {
-    return m_bottomLimmit.get();
+    return m_bottomLimit.get();
   }
 }
