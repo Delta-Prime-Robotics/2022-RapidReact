@@ -22,14 +22,18 @@ public class ArmSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public ArmSubsystem() { 
     
-    SmartDashboard.putData("Arm Top Limit Switch", m_topLimit);
-    SmartDashboard.putData("Arm Bottom Limit Switch", m_bottomLimit);  
+    SmartDashboard.putData("Arm Top Limit", m_topLimit);
+    SmartDashboard.putData("Arm Bottom Limit", m_bottomLimit);  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Motor Speed", m_motor.get());
+  }
+
+  public void stop() {
+    m_motor.set(0);
   }
 
   /***

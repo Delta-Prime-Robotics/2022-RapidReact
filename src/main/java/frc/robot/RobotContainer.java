@@ -5,23 +5,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.FlightStick;
-import frc.robot.Constants.GamePad;
-import frc.robot.Constants.Laptop;
-import frc.robot.Constants.RoboRio;
-import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.CameraSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+
+
+import static frc.robot.Constants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,6 +34,8 @@ public class RobotContainer {
 
   //private Joystick m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
   private Joystick m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
+  
+  SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -57,14 +52,16 @@ public class RobotContainer {
 
     configureDefaultCommands();
 
+    setUpAutonomousChooser();
+
     SmartDashboard.putData("Test Limit Switch", m_bottomLimit);    
   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses 
+   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link edu.wpi.first.wpilibj.XboxController}), 
+   * and then passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
     if (m_driveSubsystem != null) {
@@ -81,6 +78,9 @@ public class RobotContainer {
         .whenPressed(() -> m_cameraSubsystem.switchToClimberCam()
       );
     }
+
+    // new JoystickButton(m_gamePad, GamePad.Button.kLB)
+    //   .whenHeld(getAutonomousCommand());
   }
 
   /**
@@ -119,6 +119,43 @@ public class RobotContainer {
     }
   }
 
+  private void setUpAutonomousChooser() {
+    
+    final double driveSpeed = 0.4;
+    final double intakeSpeed = 0.2;
+
+    Command justBackupCmd = new StartEndCommand(
+        () -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), 
+        () -> m_driveSubsystem.stop(),
+        m_driveSubsystem)
+      .withTimeout(1.0);
+
+    Command timedStepsCmd = 
+    new SequentialCommandGroup(
+      new ParallelDeadlineGroup(
+        new WaitCommand(0.5),
+        new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
+      ),
+      new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem),
+      new ParallelDeadlineGroup(
+        new WaitCommand(1.0),
+        new RunCommand(() -> m_intakeSubsystem.go(intakeSpeed), m_intakeSubsystem)
+      ),
+      new InstantCommand(() -> m_intakeSubsystem.stop(), m_intakeSubsystem),
+      new ParallelDeadlineGroup(
+        new WaitCommand(1.0),
+        new RunCommand(() -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), m_driveSubsystem)
+      ),
+      new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem)
+    );
+
+    m_autonomousChooser.setDefaultOption("Do Nothing", null);
+    m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
+    m_autonomousChooser.addOption("Timed Steps", timedStepsCmd);
+
+    SmartDashboard.putData("Autonomous", m_autonomousChooser);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -126,6 +163,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return m_autonomousChooser.getSelected();
   }
 }

@@ -19,8 +19,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
   /** Creates a new ClimberSumsystem. */
   public ClimberSubsystem() {
-    SmartDashboard.putData("Climber Top Limit Switch", m_topLimit);
-    SmartDashboard.putData("Climber Bottom Limit Switch", m_bottomLimit);
+    SmartDashboard.putData("Climber Top Limit", m_topLimit);
+    SmartDashboard.putData("Climber Bottom Limit", m_bottomLimit);
     SmartDashboard.putData("Climber Motor", m_motor);
   }
 

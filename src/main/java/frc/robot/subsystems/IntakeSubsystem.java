@@ -26,6 +26,10 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake Motor Speed", m_motor.get());
   }
 
+  public void stop() {
+    m_motor.set(0);
+  }
+
   /***
    * Rotate the intake in or out.
    * @param speed A positive value rotates the intake in.
