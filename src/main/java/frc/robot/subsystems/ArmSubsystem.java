@@ -16,12 +16,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_motor = new CANSparkMax(RoboRio.CanId.kIntake, MotorType.kBrushless);
 
-  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kTopLimit);
-  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kBottomLimit);
+  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kArmTopLimit);
+  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kArmBottomLimit);
   
   /** Creates a new IntakeSubsystem. */
   public ArmSubsystem() { 
-        
+    
     SmartDashboard.putData("Arm Top Limit Switch", m_topLimit);
     SmartDashboard.putData("Arm Bottom Limit Switch", m_bottomLimit);  
   }

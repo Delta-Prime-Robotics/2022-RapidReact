@@ -14,8 +14,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private final VictorSP m_motor = new VictorSP(RoboRio.PwmPort.kClimberMotor);
 
-  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kTopLimit);
-  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kBottomLimit);
+  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kClimberTopLimit);
+  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kClimberBottomLimit);
 
   /** Creates a new ClimberSumsystem. */
   public ClimberSubsystem() {

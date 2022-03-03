@@ -19,16 +19,17 @@ public final class Constants {
             public static final int kLeftFollower = 12;
             public static final int kRightLeader = 13;
             public static final int kRightFollower = 14;
-            public static final int kIntake = 15;
-            public static final int kArm = 16;
+            public static final int kArm = 15;
+            public static final int kIntake = 16;
         }
         public static final class PwmPort {
             public static final int kClimberMotor=1;
-
-         }
+        }
         public static final class DioPort { 
-            public static final int kBottomLimit = 1;
-            public static final int kTopLimit = 2;
+            public static final int kArmBottomLimit = 1;
+            public static final int kArmTopLimit = 2;
+            public static final int kClimberBottomLimit = 3;
+            public static final int kClimberTopLimit = 4;
         }
     }
 

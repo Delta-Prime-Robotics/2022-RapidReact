@@ -30,7 +30,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private RelativeEncoder m_leftEncoder;
   private RelativeEncoder m_rightEncoder;
-    
+
+  
   /**  Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_leftLeader = new CANSparkMax(RoboRio.CanId.kLeftLeader, MotorType.kBrushless);
