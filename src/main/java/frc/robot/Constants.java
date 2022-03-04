@@ -23,13 +23,13 @@ public final class Constants {
             public static final int kIntake = 16;
         }
         public static final class PwmPort {
-            public static final int kClimberMotor=1;
+            public static final int kClimberMotor = 0;
         }
         public static final class DioPort { 
-            public static final int kArmBottomLimit = 1;
-            public static final int kArmTopLimit = 2;
-            public static final int kClimberBottomLimit = 3;
-            public static final int kClimberTopLimit = 4;
+            public static final int kArmBottomLimit = 0;
+            public static final int kArmTopLimit = 1;
+            public static final int kClimberBottomLimit = 2;
+            public static final int kClimberTopLimit = 3;
         }
     }
 

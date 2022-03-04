@@ -32,8 +32,8 @@ public class RobotContainer {
 
   private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kArmBottomLimit);
 
-  //private Joystick m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
-  private Joystick m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
+  private Joystick m_flightStick = null;
+  private Joystick m_gamePad = null;
   
   SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
 
@@ -46,6 +46,8 @@ public class RobotContainer {
     m_intakeSubsystem = new IntakeSubsystem();
     //m_cameraSubsystem = new CameraSubsystem();
     
+    //m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
+    m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -87,34 +89,30 @@ public class RobotContainer {
    * Use this method to define the default commands for subsystems
    */
   private void configureDefaultCommands() {
-    if (m_driveSubsystem != null) {
+    if (m_driveSubsystem != null && m_flightStick != null) {
       // Flight stick was buggy close to 0. Need to find a different stick.      
-      // m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
-      //   () -> m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
-      //   () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
-      // ));
-
-      // m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
-      //   () -> -m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown), 
-      //   () -> m_gamePad.getRawAxis(GamePad.LeftStick.kLeftRight )
-      // ));
+      m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
+        () -> m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
+        () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
+      ));
     }
 
     if (m_climberSubsystem != null) {
-      m_climberSubsystem.setDefaultCommand(new RunCommand(
-        () -> m_climberSubsystem.move(-m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown))
-      , m_climberSubsystem));
+      // Use buttons for raising & lowering? How fast?
+      // m_climberSubsystem.setDefaultCommand(new RunCommand(
+      //   () -> m_climberSubsystem.move(m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown))
+      // , m_climberSubsystem));
     }
 
     if (m_armSubsystem != null) {
       m_armSubsystem.setDefaultCommand(new RunCommand(
-        () -> m_armSubsystem.go(-m_gamePad.getRawAxis(GamePad.RightStick.kUpDown))
+        () -> m_armSubsystem.go(-m_gamePad.getRawAxis(GamePad.LeftStick.kUpDown))
         , m_armSubsystem));
     }
 
     if (m_intakeSubsystem != null) {
       m_intakeSubsystem.setDefaultCommand(new RunCommand(
-        () -> m_intakeSubsystem.go(-m_gamePad.getRawAxis(GamePad.RightStick.kLeftRight))
+        () -> m_intakeSubsystem.go(-m_gamePad.getRawAxis(GamePad.RightStick.kUpDown))
         , m_intakeSubsystem));
     }
   }
@@ -124,34 +122,36 @@ public class RobotContainer {
     final double driveSpeed = 0.4;
     final double intakeSpeed = 0.2;
 
-    Command justBackupCmd = new StartEndCommand(
-        () -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), 
-        () -> m_driveSubsystem.stop(),
-        m_driveSubsystem)
-      .withTimeout(1.0);
-
-    Command timedStepsCmd = 
-    new SequentialCommandGroup(
-      new ParallelDeadlineGroup(
-        new WaitCommand(0.5),
-        new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
-      ),
-      new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem),
-      new ParallelDeadlineGroup(
-        new WaitCommand(1.0),
-        new RunCommand(() -> m_intakeSubsystem.go(intakeSpeed), m_intakeSubsystem)
-      ),
-      new InstantCommand(() -> m_intakeSubsystem.stop(), m_intakeSubsystem),
-      new ParallelDeadlineGroup(
-        new WaitCommand(1.0),
-        new RunCommand(() -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), m_driveSubsystem)
-      ),
-      new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem)
-    );
-
     m_autonomousChooser.setDefaultOption("Do Nothing", null);
-    m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
-    m_autonomousChooser.addOption("Timed Steps", timedStepsCmd);
+    
+    if (m_driveSubsystem != null) {
+      Command justBackupCmd = new StartEndCommand(
+          () -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), 
+          () -> m_driveSubsystem.stop(),
+          m_driveSubsystem)
+        .withTimeout(1.0);
+      m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
+    
+      Command timedStepsCmd = 
+      new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+          new WaitCommand(0.5),
+          new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
+        ),
+        new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem),
+        new ParallelDeadlineGroup(
+          new WaitCommand(1.0),
+          new RunCommand(() -> m_intakeSubsystem.go(intakeSpeed), m_intakeSubsystem)
+        ),
+        new InstantCommand(() -> m_intakeSubsystem.stop(), m_intakeSubsystem),
+        new ParallelDeadlineGroup(
+          new WaitCommand(1.0),
+          new RunCommand(() -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), m_driveSubsystem)
+        ),
+        new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem)
+      );
+      m_autonomousChooser.addOption("Timed Steps", timedStepsCmd);
+    }
 
     SmartDashboard.putData("Autonomous", m_autonomousChooser);
   }
