@@ -11,17 +11,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CameraSubsystem extends SubsystemBase {
-  private UsbCamera _shooterCam;
-  private UsbCamera _climberCam;
+  private UsbCamera m_shooterCam;
+  private UsbCamera m_climberCam;
   
-  NetworkTableEntry _cameraSelection;
+  NetworkTableEntry m_cameraSelection;
 
   /** Creates a new CameraSubsystem. */
   public CameraSubsystem() {
-    _shooterCam = CameraServer.startAutomaticCapture(0);
-    _climberCam = CameraServer.startAutomaticCapture(1);
+    m_shooterCam = CameraServer.startAutomaticCapture(0);
+    m_climberCam = CameraServer.startAutomaticCapture(1);
 
-    _cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    m_cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
   }
   
   @Override
@@ -30,9 +30,9 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public void switchToShooterCam() {
-    _cameraSelection.setString(_shooterCam.getName());
+    m_cameraSelection.setString(m_shooterCam.getName());
   }
   public void switchToClimberCam() {
-    _cameraSelection.setString(_climberCam.getName());
+    m_cameraSelection.setString(m_climberCam.getName());
   }
 }

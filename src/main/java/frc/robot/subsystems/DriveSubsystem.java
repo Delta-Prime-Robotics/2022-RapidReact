@@ -94,4 +94,16 @@ public class DriveSubsystem extends SubsystemBase {
   public void arcadeDrive(double forwardSpeed, double rotation) {
     m_diffDrive.arcadeDrive(forwardSpeed, rotation);
   }
+
+  public void arcadeDriveWithThrottle(double forwardSpeed, double rotation, double throttle) {
+    final double kTurnRatio = 0.85;
+
+    // re-scale throttle to be from 0 to 1
+    throttle = (throttle + 1)/ 2;
+
+    forwardSpeed *= throttle;
+    rotation *= throttle * kTurnRatio;
+
+    m_diffDrive.arcadeDrive(forwardSpeed, rotation);
+  }
 }
