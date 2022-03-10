@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+// import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,15 +12,17 @@ import frc.robot.Constants.RoboRio;
 
 public class ClimberSubsystem extends SubsystemBase {
 
+  private final double kScaleFactor = 0.5;
+
   private final VictorSP m_motor = new VictorSP(RoboRio.PwmPort.kClimberMotor);
 
-  private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kClimberTopLimit);
-  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kClimberBottomLimit);
+  // private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kClimberTopLimit);
+  // private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kClimberBottomLimit);
 
   /** Creates a new ClimberSumsystem. */
   public ClimberSubsystem() {
-    SmartDashboard.putData("Climber Top Limit", m_topLimit);
-    SmartDashboard.putData("Climber Bottom Limit", m_bottomLimit);
+    // SmartDashboard.putData("Climber Top Limit", m_topLimit);
+    // SmartDashboard.putData("Climber Bottom Limit", m_bottomLimit);
     SmartDashboard.putData("Climber Motor", m_motor);
   }
 
@@ -54,16 +56,18 @@ public class ClimberSubsystem extends SubsystemBase {
         speed = -1.0;
       }
     }
-    
-    m_motor.set(speed);
+
+    m_motor.set(speed * kScaleFactor);
   }
 
   public boolean isAtTop() {
-    return m_topLimit.get();
+    return false;
+    // return m_topLimit.get();
   }
   
   public boolean isAtBottom() {
-    return m_bottomLimit.get();
+    return false;
+    // return m_bottomLimit.get();
   }
 
 }
