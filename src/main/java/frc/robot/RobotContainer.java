@@ -40,13 +40,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Subsystems (Comment out to exclude a subsystem from the robot)
-    //m_driveSubsystem = new DriveSubsystem();
+    m_driveSubsystem = new DriveSubsystem();
     //m_climberSubsystem = new ClimberSubsystem();
     //m_armSubsystem = new ArmSubsystem();
     m_intakeSubsystem = new IntakeSubsystem();
     //m_cameraSubsystem = new CameraSubsystem();
     
-    //m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
+    m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
     m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
 
     // Configure the button bindings
@@ -92,8 +92,8 @@ public class RobotContainer {
     if (m_driveSubsystem != null && m_flightStick != null) {
       // Flight stick was buggy close to 0. Need to find a different stick.      
       m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
-        () -> m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
-        () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
+        () -> -m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
+        () -> m_flightStick.getRawAxis(FlightStick.Axis.kLeftRight)
       ));
     }
 

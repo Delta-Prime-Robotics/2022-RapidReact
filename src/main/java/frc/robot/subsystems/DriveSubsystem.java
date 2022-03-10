@@ -20,6 +20,9 @@ public class DriveSubsystem extends SubsystemBase {
   /* The following is an estimate. We need to confirm with the actual robot and remove this comment. */
   private static final double kDistancePerRotation = 2 * Math.PI * 6.0;
 
+  private static final double kDriveScaleFactor = 0.75;
+  private static final double kTurnScaleFactor = 0.65;
+
   // Drive train components
   private CANSparkMax m_leftLeader;
   private CANSparkMax m_leftFollower;
@@ -92,6 +95,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void arcadeDrive(double forwardSpeed, double rotation) {
-    m_diffDrive.arcadeDrive(forwardSpeed, rotation);
+    m_diffDrive.arcadeDrive(forwardSpeed*kDriveScaleFactor, rotation*kTurnScaleFactor);
   }
 }
