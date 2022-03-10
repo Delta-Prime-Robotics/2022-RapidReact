@@ -28,9 +28,6 @@ public class RobotContainer {
   private ClimberSubsystem m_climberSubsystem = null;
   private ArmSubsystem m_armSubsystem = null;
   private IntakeSubsystem m_intakeSubsystem = null;
-  private CameraSubsystem m_cameraSubsystem = null;
-
-  private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kArmBottomLimit);
 
   private Joystick m_flightStick = null;
   private Joystick m_gamePad = null;
@@ -42,9 +39,8 @@ public class RobotContainer {
     // Subsystems (Comment out to exclude a subsystem from the robot)
     //m_driveSubsystem = new DriveSubsystem();
     //m_climberSubsystem = new ClimberSubsystem();
-    //m_armSubsystem = new ArmSubsystem();
-    m_intakeSubsystem = new IntakeSubsystem();
-    //m_cameraSubsystem = new CameraSubsystem();
+    m_armSubsystem = new ArmSubsystem();
+    //m_intakeSubsystem = new IntakeSubsystem();
     
     //m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
     m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
@@ -55,8 +51,6 @@ public class RobotContainer {
     configureDefaultCommands();
 
     setUpAutonomousChooser();
-
-    SmartDashboard.putData("Test Limit Switch", m_bottomLimit);    
   }
 
   /**
@@ -72,15 +66,6 @@ public class RobotContainer {
       );
     }
 
-    if (m_cameraSubsystem != null) {
-      new JoystickButton(m_gamePad, GamePad.Button.kLT) 
-        .whenPressed(() -> m_cameraSubsystem.switchToShooterCam()
-      );
-      new JoystickButton(m_gamePad, GamePad.Button.kRT) 
-        .whenPressed(() -> m_cameraSubsystem.switchToClimberCam()
-      );
-    }
-
     // new JoystickButton(m_gamePad, GamePad.Button.kLB)
     //   .whenHeld(getAutonomousCommand());
   }
@@ -92,8 +77,8 @@ public class RobotContainer {
     if (m_driveSubsystem != null && m_flightStick != null) {
       // Flight stick was buggy close to 0. Need to find a different stick.      
       m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
-        () -> m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
-        () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
+        () -> -m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
+        () -> m_flightStick.getRawAxis(FlightStick.Axis.kLeftRight)
       ));
     }
 
@@ -129,7 +114,7 @@ public class RobotContainer {
           () -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), 
           () -> m_driveSubsystem.stop(),
           m_driveSubsystem)
-        .withTimeout(1.0);
+        .withTimeout(3.0);
       m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
     
       Command timedStepsCmd = 
