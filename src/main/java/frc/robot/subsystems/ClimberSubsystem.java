@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,20 +19,28 @@ public class ClimberSubsystem extends SubsystemBase {
   private final double kScaleFactor = 0.5;
 
   private final VictorSP m_motor = new VictorSP(RoboRio.PwmPort.kClimberMotor);
+  // private final CANSparkMax m_motor = new CANSparkMax(RoboRio.CanId.kClimber, MotorType.kBrushless);
 
   // private final DigitalInput m_topLimit = new DigitalInput(RoboRio.DioPort.kClimberTopLimit);
   // private final DigitalInput m_bottomLimit = new DigitalInput(RoboRio.DioPort.kClimberBottomLimit);
 
   /** Creates a new ClimberSumsystem. */
   public ClimberSubsystem() {
+    // m_motor.setSmartCurrentLimit(25, 90, 10);
+    // m_motor.clearFaults();
+    // m_motor.enableVoltageCompensation(12);
+    // m_motor.setIdleMode(IdleMode.kBrake);
+    // m_motor.setClosedLoopRampRate(1.0);
+    // m_motor.setSecondaryCurrentLimit(95,250);
+
     // SmartDashboard.putData("Climber Top Limit", m_topLimit);
     // SmartDashboard.putData("Climber Bottom Limit", m_bottomLimit);
-    SmartDashboard.putData("Climber Motor", m_motor);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Climber Motor", m_motor.get());
   }
 
   public void stop() {
@@ -63,7 +75,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public boolean isAtTop() {
     return false;
     // return m_topLimit.get();
-  }
+   }
   
   public boolean isAtBottom() {
     return false;

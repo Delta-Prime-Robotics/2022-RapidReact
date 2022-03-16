@@ -40,16 +40,16 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Subsystems (Comment out to exclude a subsystem from the robot)
-    //m_driveSubsystem = new DriveSubsystem();
-    //m_climberSubsystem = new ClimberSubsystem();
+    m_driveSubsystem = new DriveSubsystem();
+    m_climberSubsystem = new ClimberSubsystem();
     m_armSubsystem = new ArmSubsystem();
-    //m_intakeSubsystem = new IntakeSubsystem();
+    m_intakeSubsystem = new IntakeSubsystem();
     
     // Controllers (comment out to exclude a controller from the robot)
-    //m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
+    m_flightStick = new Joystick(Laptop.UsbPort.kFlightstick);
     m_gamePad = new Joystick(Laptop.UsbPort.kGamePad);
     
-    //m_theOnlyCam = CameraServer.startAutomaticCapture(0);
+    m_theOnlyCam = CameraServer.startAutomaticCapture(0);
     if (m_theOnlyCam != null) {
       m_theOnlyCam.setResolution(320, 240);
     }
@@ -78,13 +78,18 @@ public class RobotContainer {
 
     if (m_climberSubsystem != null && m_gamePad != null) {
       new JoystickButton(m_gamePad, GamePad.Button.kY)
-        .whileHeld(() -> m_climberSubsystem.move(0.1)
+        .whileHeld(() -> m_climberSubsystem.move(0.8)
+        );
+      new JoystickButton(m_gamePad, GamePad.Button.kY)
+        .whenReleased(() -> m_climberSubsystem.stop()
         );
 
       new JoystickButton(m_gamePad, GamePad.Button.kA)
-        .whileHeld(() -> m_climberSubsystem.move(-0.1)
+        .whileHeld(() -> m_climberSubsystem.move(-1.5)
         );
-    }
+      new JoystickButton(m_gamePad, GamePad.Button.kA)
+        .whenReleased(() -> m_climberSubsystem.stop()
+        );    }
 
     if (m_gamePad != null) {
       // Uncomment to allow testing of the autonomous commands during teleop 
@@ -102,7 +107,7 @@ public class RobotContainer {
     if (m_driveSubsystem != null && m_flightStick != null) {
       m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, 
         () -> -m_flightStick.getRawAxis(FlightStick.Axis.kFwdBack), 
-        () -> m_flightStick.getRawAxis(FlightStick.Axis.kLeftRight)
+        () -> m_flightStick.getRawAxis(FlightStick.Axis.kRotate)
       ));
     }
 
@@ -134,19 +139,18 @@ public class RobotContainer {
    */
   private void setUpAutonomousChooser() {
     
-    final double driveSpeed = 0.4;
+    final double driveSpeed = -0.5;
     final double intakeSpeed = 0.2;
 
-    m_autonomousChooser.setDefaultOption("Do Nothing", null);
-    
     if (m_driveSubsystem != null) {
-      Command justBackupCmd = new StartEndCommand(
-          () -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), 
-          () -> m_driveSubsystem.stop(),
-          m_driveSubsystem)
-        .withTimeout(3.0);
-      m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
+      Command justBackupCmd = new ParallelDeadlineGroup(
+        new WaitCommand(2.5),
+        new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
+      );
+      m_autonomousChooser.setDefaultOption("Just Back Up", justBackupCmd);
     }
+
+    m_autonomousChooser.addOption("Do Nothing", null);
     
     if (m_driveSubsystem != null && m_intakeSubsystem != null) {
       Command timedStepsCmd = 

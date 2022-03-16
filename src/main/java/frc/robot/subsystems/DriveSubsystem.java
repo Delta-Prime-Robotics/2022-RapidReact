@@ -20,8 +20,8 @@ public class DriveSubsystem extends SubsystemBase {
   /* The following is an estimate. We need to confirm with the actual robot and remove this comment. */
   private static final double kDistancePerRotation = 2 * Math.PI * 6.0;
 
-  private static final double kDriveScaleFactor = 0.75;
-  private static final double kTurnScaleFactor = 0.65;
+  private static final double kDriveScaleFactor = 0.80;
+  private static final double kTurnScaleFactor = 0.70;
 
   // Drive train components
   private CANSparkMax m_leftLeader;
@@ -49,6 +49,11 @@ public class DriveSubsystem extends SubsystemBase {
     setRampRate(kRampPeriod);
 
     m_diffDrive = new DifferentialDrive(m_leftLeader, m_rightLeader);
+
+    // m_leftLeader.setSmartCurrentLimit(30, 90, 10);
+    // m_leftFollower.setSmartCurrentLimit(30, 90, 10);
+    // m_rightLeader.setSmartCurrentLimit(30, 90, 10);
+    // m_rightFollower.setSmartCurrentLimit(30, 90, 10);
 
     m_leftEncoder = m_leftLeader.getEncoder();
     m_leftEncoder.setPositionConversionFactor(kDistancePerRotation);

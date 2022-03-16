@@ -21,9 +21,11 @@ public final class Constants {
             public static final int kRightFollower = 14;
             public static final int kArm = 15;
             public static final int kIntake = 16;
+            public static final int kClimber = 17;
         }
         public static final class PwmPort {
             public static final int kClimberMotor = 0;
+            public static final int kIntakeMotor = 2;
         }
         public static final class DioPort { 
             public static final int kArmBottomLimit = 0;
