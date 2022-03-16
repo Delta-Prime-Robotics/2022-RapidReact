@@ -4,9 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+// import com.revrobotics.CANSparkMax;
+// import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
@@ -26,12 +25,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
   /** Creates a new ClimberSumsystem. */
   public ClimberSubsystem() {
-    // m_motor.setSmartCurrentLimit(25, 90, 10);
-    // m_motor.clearFaults();
-    // m_motor.enableVoltageCompensation(12);
-    // m_motor.setIdleMode(IdleMode.kBrake);
-    // m_motor.setClosedLoopRampRate(1.0);
-    // m_motor.setSecondaryCurrentLimit(95,250);
 
     // SmartDashboard.putData("Climber Top Limit", m_topLimit);
     // SmartDashboard.putData("Climber Bottom Limit", m_bottomLimit);
