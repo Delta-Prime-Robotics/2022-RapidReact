@@ -54,7 +54,7 @@ public class RobotContainer {
     if (m_camera1 != null) {
       m_camera1.setResolution(320, 240);
     }
-    //m_camera2 = CameraServer.startAutomaticCapture(0);
+    m_camera2 = CameraServer.startAutomaticCapture(1);
     if (m_camera2 != null) {
       m_camera2.setResolution(320, 240);
     }
@@ -83,14 +83,14 @@ public class RobotContainer {
 
     if (m_climberSubsystem != null && m_gamePad != null) {
       new JoystickButton(m_gamePad, GamePad.Button.kY)
-        .whileHeld(() -> m_climberSubsystem.move(0.8)
+        .whileHeld(() -> m_climberSubsystem.move(-1.5)
         );
       new JoystickButton(m_gamePad, GamePad.Button.kY)
         .whenReleased(() -> m_climberSubsystem.stop()
         );
 
       new JoystickButton(m_gamePad, GamePad.Button.kA)
-        .whileHeld(() -> m_climberSubsystem.move(-1.5)
+        .whileHeld(() -> m_climberSubsystem.move(0.8)
         );
       new JoystickButton(m_gamePad, GamePad.Button.kA)
         .whenReleased(() -> m_climberSubsystem.stop()
@@ -145,40 +145,41 @@ public class RobotContainer {
   private void setUpAutonomousChooser() {
     
     final double driveSpeed = 0.5;
-    final double intakeSpeed = 0.4;
+    final double intakeSpeed = 1.0;
 
     if (m_driveSubsystem != null) {
       Command justBackupCmd = new ParallelDeadlineGroup(
         new WaitCommand(2.5),
         new RunCommand(() -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), m_driveSubsystem)
       );
-      m_autonomousChooser.setDefaultOption("Just Back Up", justBackupCmd);
+      m_autonomousChooser.addOption("Just Back Up", justBackupCmd);
     }
 
-    m_autonomousChooser.addOption("Do Nothing", null);
-    
     if (m_driveSubsystem != null && m_intakeSubsystem != null) {
       Command timedStepsCmd = 
       new SequentialCommandGroup(
-        // new ParallelDeadlineGroup(
-        //   new WaitCommand(1.5),
-        //   new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
-        // ),
-        // new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem),
+      //   new ParallelDeadlineGroup(
+      //     new WaitCommand(0.5),
+      //     new RunCommand(() -> m_driveSubsystem.arcadeDrive(driveSpeed, 0), m_driveSubsystem)
+      //   ),
+      //   new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem),
         new ParallelDeadlineGroup(
-          new WaitCommand(2.0),
+          new WaitCommand(1.0),
           new RunCommand(() -> m_intakeSubsystem.go(intakeSpeed), m_intakeSubsystem)
         ),
         new InstantCommand(() -> m_intakeSubsystem.stop(), m_intakeSubsystem),
         new ParallelDeadlineGroup(
-          new WaitCommand(2.5),
+          new WaitCommand(3.5),
           new RunCommand(() -> m_driveSubsystem.arcadeDrive(-driveSpeed, 0), m_driveSubsystem)
         ),
         new InstantCommand(() -> m_driveSubsystem.stop(), m_driveSubsystem)
       );
-      m_autonomousChooser.addOption("Timed Steps", timedStepsCmd);
+      m_autonomousChooser.setDefaultOption("Timed Steps", timedStepsCmd);
     }
 
+
+    m_autonomousChooser.addOption("Do Nothing", null);
+    
     SmartDashboard.putData("Autonomous", m_autonomousChooser);
   }
 
