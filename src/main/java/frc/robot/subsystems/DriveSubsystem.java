@@ -73,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     try {
       m_navx = new AHRS(SPI.Port.kMXP);
-      SmartDashboard.putData(m_navx);
+      //SmartDashboard.putData(m_navx);
     }
     catch (RuntimeException ex) {
       DriverStation.reportError("Error instantiating navX MSP: " + ex.getMessage(), true);
@@ -83,7 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    detectCollision();
+    //detectCollision();
 
     // SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getPosition());
     // SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getPosition());
