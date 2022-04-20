@@ -24,8 +24,8 @@ public final class Constants {
             public static final int kClimber = 17;
         }
         public static final class PwmPort {
-            public static final int kClimberMotor = 0;
-            public static final int kIntakeMotor = 2;
+            public static final int kClimberMotor = 2;
+            public static final int kIntakeMotor = 0;
         }
         public static final class DioPort { 
             public static final int kArmBottomLimit = 0;

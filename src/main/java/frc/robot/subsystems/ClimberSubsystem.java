@@ -15,7 +15,7 @@ import frc.robot.Constants.RoboRio;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-  private final double kScaleFactor = 0.5;
+  private final double kScaleFactor = 1.0;
 
   private final VictorSP m_motor = new VictorSP(RoboRio.PwmPort.kClimberMotor);
   // private final CANSparkMax m_motor = new CANSparkMax(RoboRio.CanId.kClimber, MotorType.kBrushless);

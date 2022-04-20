@@ -23,7 +23,8 @@ public class ArmSubsystem extends SubsystemBase {
   
   /** Creates a new IntakeSubsystem. */
   public ArmSubsystem() { 
-    
+    m_motor.setSmartCurrentLimit(30, 90, 10);
+
     // SmartDashboard.putData("Arm Top Limit", m_topLimit);
     // SmartDashboard.putData("Arm Bottom Limit", m_bottomLimit);  
   }

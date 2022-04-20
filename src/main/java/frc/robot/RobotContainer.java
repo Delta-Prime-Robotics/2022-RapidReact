@@ -83,14 +83,14 @@ public class RobotContainer {
 
     if (m_climberSubsystem != null && m_gamePad != null) {
       new JoystickButton(m_gamePad, GamePad.Button.kY)
-        .whileHeld(() -> m_climberSubsystem.move(0.8)
+        .whileHeld(() -> m_climberSubsystem.move(-1.0)
         );
       new JoystickButton(m_gamePad, GamePad.Button.kY)
         .whenReleased(() -> m_climberSubsystem.stop()
         );
 
       new JoystickButton(m_gamePad, GamePad.Button.kA)
-        .whileHeld(() -> m_climberSubsystem.move(-1.5)
+        .whileHeld(() -> m_climberSubsystem.move(0.6)
         );
       new JoystickButton(m_gamePad, GamePad.Button.kA)
         .whenReleased(() -> m_climberSubsystem.stop()
